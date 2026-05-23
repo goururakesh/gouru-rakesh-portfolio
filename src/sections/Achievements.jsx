@@ -45,36 +45,40 @@ export default function Achievements() {
   }, []);
 
   return (
-    <section id="achievements" className="relative px-4 py-24 md:py-32" ref={ref}>
+    <section id="achievements" className="section-spacing relative px-4" ref={ref}>
       <div className="mx-auto max-w-6xl">
-        <SectionTitle subtitle="Milestones" title="Achievements" />
+        <SectionTitle
+          subtitle="Milestones"
+          title="Achievements"
+          description="Hackathons, internships, and programs that shaped my problem-solving and industry readiness."
+        />
         <motion.div
-          className="mb-12 grid grid-cols-2 gap-6 md:grid-cols-4"
+          className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
         >
           {[
-            { label: 'Hackathons', value: 3 },
+            { label: 'Hackathons Won', value: 1 },
             { label: 'Internships', value: 4 },
-            { label: 'Projects', value: 10 },
+            { label: 'Projects Built', value: 10 },
             { label: 'Technologies', value: 20 },
           ].map((stat) => (
             <motion.div
               key={stat.label}
-              className="glass gradient-border rounded-2xl p-6 text-center"
+              className="glass glass-premium gradient-border rounded-2xl p-4 text-center md:p-5"
               variants={fadeUp}
             >
-              <p className="font-display text-3xl font-bold gradient-text md:text-4xl">
+              <p className="font-display text-2xl font-bold gradient-text md:text-3xl">
                 <Counter value={stat.value} inView={inView} />
               </p>
-              <p className="mt-2 text-sm text-white/50">{stat.label}</p>
+              <p className="mt-1 text-xs text-white/50 md:text-sm">{stat.label}</p>
             </motion.div>
           ))}
         </motion.div>
         <motion.div
-          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
@@ -85,16 +89,21 @@ export default function Achievements() {
             return (
               <motion.div
                 key={item.title}
-                className="glass gradient-border group rounded-2xl p-6 text-center transition hover:glow-orange"
+                className="glass glass-premium gradient-border group rounded-2xl p-5 text-left transition hover:glow-orange"
                 variants={fadeUp}
                 custom={i}
-                whileHover={{ y: -6, scale: 1.02 }}
+                whileHover={{ y: -4 }}
               >
-                <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500/20 to-cyan-500/20 text-2xl text-orange-400 transition group-hover:scale-110">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500/20 to-cyan-500/20 text-xl text-orange-400">
                   <Icon />
                 </span>
-                <h3 className="mt-4 font-display font-semibold">{item.title}</h3>
-                <p className="mt-1 text-sm text-cyan-400">{item.subtitle}</p>
+                <h3 className="mt-3 font-display font-semibold">{item.title}</h3>
+                <p className="text-sm text-cyan-400">{item.subtitle}</p>
+                {item.description && (
+                  <p className="mt-2 text-xs leading-relaxed text-white/50 light-mode:text-slate-600">
+                    {item.description}
+                  </p>
+                )}
               </motion.div>
             );
           })}

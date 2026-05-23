@@ -9,7 +9,7 @@ const Achievements = lazy(() => import('../sections/Achievements'));
 const Contact = lazy(() => import('../sections/Contact'));
 
 function SectionFallback() {
-  return <div className="min-h-[200px]" />;
+  return <div className="min-h-[80px]" />;
 }
 
 export default function Home() {

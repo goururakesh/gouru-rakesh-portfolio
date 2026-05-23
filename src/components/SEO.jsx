@@ -22,6 +22,7 @@ export default function SEO() {
           url: siteUrl,
           sameAs: [PERSONAL.github, PERSONAL.linkedin],
           email: PERSONAL.email,
+          telephone: PERSONAL.phone,
         })}
       </script>
     </Helmet>

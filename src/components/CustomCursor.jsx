@@ -5,8 +5,9 @@ import { useMousePosition } from '../hooks/useMousePosition';
 export default function CustomCursor() {
   const { x, y } = useMousePosition();
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const hasFinePointer = useMediaQuery('(pointer: fine)');
 
-  if (isMobile) return null;
+  if (isMobile || !hasFinePointer) return null;
 
   return (
     <>

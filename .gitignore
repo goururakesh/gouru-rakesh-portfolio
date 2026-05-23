@@ -13,6 +13,8 @@ dist-ssr
 *.local
 .env
 .env.local
+gh-login-err.txt
+gh-login-out.txt
 
 # Editor directories and files
 .vscode/*

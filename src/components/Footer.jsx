@@ -7,7 +7,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative border-t border-white/5 pt-16 pb-8">
+    <footer className="relative border-t border-white/5 pt-10 pb-8">
       <motion.div
         className="absolute top-0 right-0 left-0 h-px bg-gradient-to-r from-transparent via-orange-500 to-transparent"
         animate={{ opacity: [0.4, 1, 0.4] }}

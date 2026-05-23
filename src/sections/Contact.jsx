@@ -1,10 +1,10 @@
-import emailjs from '@emailjs/browser';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { FaGithub, FaLinkedin, FaEnvelope, FaPhone } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaEnvelope, FaPhone, FaWhatsapp } from 'react-icons/fa';
 import SectionTitle from '../components/SectionTitle';
 import { PERSONAL } from '../constants';
 import { fadeUp } from '../animations/variants';
+import { sendToWhatsApp } from '../utils/whatsapp';
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
@@ -15,41 +15,27 @@ export default function Contact() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
     setStatus({ type: '', message: '' });
 
-    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
-    if (!serviceId || !templateId || !publicKey) {
-      setStatus({
-        type: 'info',
-        message:
-          'Email service is not configured yet. Please add VITE_EMAILJS_* variables or email me directly.',
-      });
-      setLoading(false);
-      return;
-    }
-
     try {
-      await emailjs.send(
-        serviceId,
-        templateId,
-        {
-          from_name: form.name,
-          from_email: form.email,
-          message: form.message,
-          to_name: PERSONAL.name,
-        },
-        publicKey
-      );
-      setStatus({ type: 'success', message: 'Message sent successfully!' });
+      sendToWhatsApp({
+        name: form.name.trim(),
+        email: form.email.trim(),
+        message: form.message.trim(),
+      });
+      setStatus({
+        type: 'success',
+        message: 'Opening WhatsApp… Complete send in the app to reach me.',
+      });
       setForm({ name: '', email: '', message: '' });
     } catch {
-      setStatus({ type: 'error', message: 'Failed to send. Please try again or email directly.' });
+      setStatus({
+        type: 'error',
+        message: 'Could not open WhatsApp. Please message me directly.',
+      });
     } finally {
       setLoading(false);
     }
@@ -57,15 +43,25 @@ export default function Contact() {
 
   const contacts = [
     { icon: FaEnvelope, label: 'Email', href: `mailto:${PERSONAL.email}`, value: PERSONAL.email },
-    { icon: FaPhone, label: 'Phone', href: `tel:${PERSONAL.phone.replace(/\s/g, '')}`, value: PERSONAL.phone },
+    { icon: FaPhone, label: 'Phone', href: `tel:+91${PERSONAL.phone.replace(/\D/g, '').slice(-10)}`, value: PERSONAL.phone },
+    {
+      icon: FaWhatsapp,
+      label: 'WhatsApp',
+      href: `https://wa.me/${PERSONAL.whatsapp}`,
+      value: 'Chat on WhatsApp',
+    },
     { icon: FaLinkedin, label: 'LinkedIn', href: PERSONAL.linkedin, value: 'Connect on LinkedIn' },
     { icon: FaGithub, label: 'GitHub', href: PERSONAL.github, value: 'View my repositories' },
   ];
 
   return (
-    <section id="contact" className="relative px-4 py-24 md:py-32">
+    <section id="contact" className="section-spacing relative px-4 pb-20" aria-labelledby="contact-heading">
       <div className="mx-auto max-w-6xl">
-        <SectionTitle subtitle="Get In Touch" title="Contact Me" />
+        <SectionTitle
+          subtitle="Get In Touch"
+          title="Contact Me"
+          description="Have a project, internship, or collaboration in mind? Fill the form — it opens WhatsApp with your message ready to send."
+        />
         <motion.div
           className="grid gap-10 lg:grid-cols-2"
           variants={fadeUp}
@@ -77,66 +73,89 @@ export default function Contact() {
             {contacts.map((c) => {
               const Icon = c.icon;
               return (
-              <motion.a
-                key={c.label}
-                href={c.href}
-                target={c.href.startsWith('http') ? '_blank' : undefined}
-                rel="noopener noreferrer"
-                className="glass gradient-border flex items-center gap-4 rounded-2xl p-5 transition hover:glow-blue"
-                whileHover={{ x: 6 }}
-              >
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/15 text-xl text-orange-400">
-                  <Icon />
-                </span>
-                <div>
-                  <p className="text-xs tracking-wider text-white/40 uppercase">{c.label}</p>
-                  <p className="font-medium text-white/90 light-mode:text-slate-800">{c.value}</p>
-                </div>
-              </motion.a>
-            );
+                <motion.a
+                  key={c.label}
+                  href={c.href}
+                  target={c.href.startsWith('http') ? '_blank' : undefined}
+                  rel="noopener noreferrer"
+                  className="glass glass-premium gradient-border flex items-center gap-4 rounded-2xl p-5 transition hover:glow-blue"
+                  whileHover={{ x: 6 }}
+                >
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/15 text-xl text-orange-400">
+                    <Icon />
+                  </span>
+                  <div>
+                    <p className="text-xs tracking-wider text-white/40 uppercase">{c.label}</p>
+                    <p className="font-medium text-white/90 light-mode:text-slate-800">{c.value}</p>
+                  </div>
+                </motion.a>
+              );
             })}
           </div>
 
-          <form onSubmit={handleSubmit} className="glass gradient-border rounded-3xl p-6 md:p-8">
+          <form
+            onSubmit={handleSubmit}
+            className="glass glass-premium gradient-border rounded-3xl p-6 md:p-8"
+            aria-label="Contact form via WhatsApp"
+          >
+            <p className="mb-4 text-sm text-white/50 light-mode:text-slate-600">
+              Submit the form to send your message to my WhatsApp.
+            </p>
             <div className="space-y-4">
+              <label className="sr-only" htmlFor="contact-name">
+                Your Name
+              </label>
               <input
+                id="contact-name"
                 type="text"
                 name="name"
                 value={form.name}
                 onChange={handleChange}
                 placeholder="Your Name"
                 required
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/30 outline-none transition focus:border-orange-500/50 light-mode:text-slate-800"
+                autoComplete="name"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/30 outline-none transition focus:border-orange-500/50 focus-visible:ring-2 focus-visible:ring-orange-500/40 light-mode:text-slate-800"
               />
+              <label className="sr-only" htmlFor="contact-email">
+                Your Email
+              </label>
               <input
+                id="contact-email"
                 type="email"
                 name="email"
                 value={form.email}
                 onChange={handleChange}
                 placeholder="Your Email"
                 required
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/30 outline-none transition focus:border-orange-500/50 light-mode:text-slate-800"
+                autoComplete="email"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/30 outline-none transition focus:border-orange-500/50 focus-visible:ring-2 focus-visible:ring-orange-500/40 light-mode:text-slate-800"
               />
+              <label className="sr-only" htmlFor="contact-message">
+                Your Message
+              </label>
               <textarea
+                id="contact-message"
                 name="message"
                 value={form.message}
                 onChange={handleChange}
-                placeholder="Your Message"
+                placeholder="Your Message / Description"
                 required
                 rows={5}
-                className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/30 outline-none transition focus:border-orange-500/50 light-mode:text-slate-800"
+                className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/30 outline-none transition focus:border-orange-500/50 focus-visible:ring-2 focus-visible:ring-orange-500/40 light-mode:text-slate-800"
               />
               <motion.button
                 type="submit"
                 disabled={loading}
-                className="w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 py-3 font-semibold text-white transition hover:shadow-lg hover:shadow-orange-500/30 disabled:opacity-60"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#25D366] to-[#128C7E] py-3 font-semibold text-white transition hover:shadow-lg hover:shadow-green-500/25 disabled:opacity-60"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                {loading ? 'Sending...' : 'Send Message'}
+                <FaWhatsapp className="text-xl" />
+                {loading ? 'Opening WhatsApp…' : 'Send via WhatsApp'}
               </motion.button>
               {status.message && (
                 <p
+                  role="status"
                   className={`text-center text-sm ${
                     status.type === 'success'
                       ? 'text-cyan-400'

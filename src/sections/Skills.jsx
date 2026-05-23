@@ -17,7 +17,7 @@ import {
 } from 'react-icons/fa';
 import { SiExpress, SiMongodb, SiMysql, SiPostman, SiArduino } from 'react-icons/si';
 import SectionTitle from '../components/SectionTitle';
-import { SKILLS } from '../constants';
+import { SKILLS, SKILL_CATEGORY_INFO } from '../constants';
 import { fadeUp, staggerContainer } from '../animations/variants';
 
 const iconMap = {
@@ -53,11 +53,15 @@ const categoryIcons = {
 
 export default function Skills() {
   return (
-    <section id="skills" className="relative px-4 py-24 md:py-32">
+    <section id="skills" className="section-spacing relative px-4">
       <div className="mx-auto max-w-6xl">
-        <SectionTitle subtitle="Expertise" title="Skills & Technologies" />
+        <SectionTitle
+          subtitle="Expertise"
+          title="Skills & Technologies"
+          description="Technologies I use daily across AI development, web engineering, databases, and enterprise tooling."
+        />
         <motion.div
-          className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
+          className="grid gap-5 md:grid-cols-2 lg:grid-cols-3"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
@@ -80,6 +84,11 @@ export default function Skills() {
                 </span>
                 <h3 className="font-display text-lg font-semibold">{category}</h3>
               </div>
+              {SKILL_CATEGORY_INFO[category] && (
+                <p className="mb-3 text-xs leading-relaxed text-white/45 light-mode:text-slate-500">
+                  {SKILL_CATEGORY_INFO[category]}
+                </p>
+              )}
               <div className="flex flex-wrap gap-2">
                 {items.map((skill) => {
                   const Icon = iconMap[skill] || FaCode;

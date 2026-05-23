@@ -1,4 +1,6 @@
 import { motion } from 'framer-motion';
+import { useMediaQuery } from '../hooks/useMediaQuery';
+import { useMagnetic } from '../hooks/useMagnetic';
 
 const variants = {
   primary:
@@ -15,16 +17,30 @@ export default function Button({
   href,
   onClick,
   className = '',
+  magnetic = true,
   ...props
 }) {
   const base =
-    'inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-medium transition-all duration-300 text-sm md:text-base';
+    'inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-medium transition-all duration-300 text-sm md:text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50';
 
   const Component = href ? 'a' : 'button';
-  const linkProps = href ? { href, target: href.startsWith('http') ? '_blank' : undefined, rel: 'noopener noreferrer' } : {};
+  const linkProps = href
+    ? { href, target: href.startsWith('http') ? '_blank' : undefined, rel: 'noopener noreferrer' }
+    : {};
+
+  const isDesktop = useMediaQuery('(min-width: 768px)');
+  const { ref, onMouseMove, onMouseLeave } = useMagnetic(0.25);
+  const useMagneticEffect = magnetic && isDesktop;
 
   return (
-    <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+    <motion.div
+      ref={useMagneticEffect ? ref : undefined}
+      className="inline-block"
+      whileHover={{ scale: useMagneticEffect ? 1 : 1.03 }}
+      whileTap={{ scale: 0.97 }}
+      onMouseMove={useMagneticEffect ? onMouseMove : undefined}
+      onMouseLeave={useMagneticEffect ? onMouseLeave : undefined}
+    >
       <Component
         className={`${base} ${variants[variant]} ${className}`}
         onClick={onClick}

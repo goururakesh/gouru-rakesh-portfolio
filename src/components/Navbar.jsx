@@ -53,7 +53,7 @@ export default function Navbar({ isDark, onToggleTheme }) {
           GR
         </button>
 
-        <ul className="hidden items-center gap-1 lg:flex">
+        <ul className="hidden items-center gap-1 md:flex">
           {NAV_LINKS.map((link) => (
             <li key={link.id}>
               <button
@@ -75,7 +75,7 @@ export default function Navbar({ isDark, onToggleTheme }) {
           <ThemeToggle isDark={isDark} onToggle={onToggleTheme} />
           <button
             type="button"
-            className="glass flex h-10 w-10 items-center justify-center rounded-xl lg:hidden"
+            className="glass flex h-10 w-10 items-center justify-center rounded-xl md:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Menu"
           >
@@ -86,7 +86,7 @@ export default function Navbar({ isDark, onToggleTheme }) {
         <AnimatePresence>
           {mobileOpen && (
             <motion.div
-              className="glass absolute top-full right-0 left-0 mt-2 rounded-2xl p-4 lg:hidden"
+              className="glass glass-premium absolute top-full right-0 left-0 z-50 mt-2 rounded-2xl p-4 shadow-2xl md:hidden"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
