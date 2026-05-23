@@ -6,8 +6,8 @@ Ultra-modern, animated personal portfolio built with **React**, **Vite**, **Tail
 
 ## Live Demo
 
-> Update this URL after Vercel deployment:
-> **https://gouru-rakesh-portfolio.vercel.app**
+- **GitHub Pages:** https://goururakesh.github.io/gouru-rakesh-portfolio/
+- **GitHub Repo:** https://github.com/goururakesh/gouru-rakesh-portfolio
 
 ## Features
 
@@ -31,7 +31,7 @@ Ultra-modern, animated personal portfolio built with **React**, **Vite**, **Tail
 | 3D | Three.js, React Three Fiber |
 | Icons | React Icons |
 | Contact | EmailJS |
-| Deploy | Vercel |
+| Deploy | GitHub Pages, Vercel, Netlify |
 
 ## Project Structure
 
